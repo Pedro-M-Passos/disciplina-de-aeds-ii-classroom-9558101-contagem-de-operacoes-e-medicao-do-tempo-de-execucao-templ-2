@@ -1,4 +1,6 @@
 import java.util.Random;
+import java.util.function.Consumer;
+
 
 /** 
  * MIT License
@@ -170,6 +172,45 @@ public class App {
 
         }
     }
+
+    public static void testaVetores(int[] tamanhosVetores, Consumer<int[]> codigo) {
+        
+        int tamVetor;
+        int[] vetor;
+        long inicio, termino;
+        double duracao;
+
+        for(int i = 0; i < tamanhosVetores.length; i++) {
+            tamVetor = tamanhosVetores[i];
+            vetor = gerarVetor(tamVetor);
+            operacoes = 0;
+            inicio = System.nanoTime();
+            codigo.accept(vetor);
+            termino = System.nanoTime();
+            duracao = (double)(termino - inicio) * NANO_TO_MILLI;
+            System.out.printf("%,d; %,d; %,.2f ms\n", tamVetor, operacoes, duracao);
+
+        }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+    }
+
+    static int[] bubbleSort(int[] vetor) {
+        int n = vetor.length;
+        boolean trocou = true;
+
+        for (int i = n - 1; (i > 0 && trocou); i--) {
+            trocou = false;
+            for (int j = 0; j < n - 1; j++) {
+                if (vetor[j] > vetor[j + 1]) {
+                    // Troca os elementos
+                    int temp = vetor[j];
+                    vetor[j] = vetor[j + 1];
+                    vetor[j + 1] = temp;
+                }
+            }
+        }
+        return vetor;
+    }
+
 
     /**
      * Gerador de vetores aleatórios de tamanho pré-definido. 
