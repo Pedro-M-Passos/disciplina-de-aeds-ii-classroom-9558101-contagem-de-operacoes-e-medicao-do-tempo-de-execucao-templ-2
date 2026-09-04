@@ -91,6 +91,82 @@ public class App {
             return codigo4(n - 1) + codigo4(n - 2);
     }
 
+    static void executarCodigo1() {
+
+        for (int tamanho : tamanhosTesteGrande) {
+
+            int[] vetor = gerarVetor(tamanho);
+            operacoes = 0;
+            long inicio = System.nanoTime();
+            codigo1(vetor);
+            long fim = System.nanoTime();
+            double tempo = (fim - inicio) * nanoToMilli;
+            System.out.println(
+                "Tamanho: " + tamanho +
+                " | Operacoes: " + operacoes +
+                " | Tempo: " + tempo + " ms"
+            );
+
+        }
+    }
+
+    static void executarCodigo2() {
+
+        for (int tamanho : tamanhosTesteGrande) {
+
+            int[] vetor = gerarVetor(tamanho);
+            operacoes = 0;
+            long inicio = System.nanoTime();
+            codigo2(vetor);
+            long fim = System.nanoTime();
+            double tempo = (fim - inicio) * nanoToMilli;
+            System.out.println(
+                "Tamanho: " + tamanho +
+                " | Operacoes: " + operacoes +
+                " | Tempo: " + tempo + " ms"
+            );
+
+        }
+    }
+
+    static void executarCodigo3() {
+
+        for (int tamanho : tamanhosTesteMedio) {
+
+            int[] vetor = gerarVetor(tamanho);
+            operacoes = 0;
+            long inicio = System.nanoTime();
+            codigo3(vetor);
+            long fim = System.nanoTime();
+            double tempo = (fim - inicio) * nanoToMilli;
+            System.out.println(
+                "Tamanho: " + tamanho +
+                " | Operacoes: " + operacoes +
+                " | Tempo: " + tempo + " ms"
+            );
+
+        }
+    }
+
+    static void executarCodigo4() {
+
+
+        for (int n : tamanhosTestePequeno) {
+
+            operacoes = 0;
+            long inicio = System.nanoTime();
+            codigo4(n);
+            long fim = System.nanoTime();
+            double tempo = (fim - inicio) * nanoToMilli;
+            System.out.println(
+                "n: " + n +
+                " | Operacoes: " + operacoes +
+                " | Tempo: " + tempo + " ms"
+            );
+
+        }
+    }
+
     /**
      * Gerador de vetores aleatórios de tamanho pré-definido. 
      * @param tamanho Tamanho do vetor a ser criado.
@@ -106,5 +182,12 @@ public class App {
     }
     public static void main(String[] args) {
         
+
+    executarCodigo1();
+    executarCodigo2();
+    executarCodigo3();
+    executarCodigo4();
+
+
     }
 }
