@@ -1,5 +1,6 @@
 import java.util.Random;
 import java.util.function.Consumer;
+import java.util.Arrays;
 
 
 /** 
@@ -187,7 +188,7 @@ public class App {
             inicio = System.nanoTime();
             codigo.accept(vetor);
             termino = System.nanoTime();
-            duracao = (double)(termino - inicio) * NANO_TO_MILLI;
+            duracao = (double)(termino - inicio) * nanoToMilli;
             System.out.printf("%,d; %,d; %,.2f ms\n", tamVetor, operacoes, duracao);
 
         }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
@@ -212,6 +213,21 @@ public class App {
     }
 
 
+    static int[] insertionSort(int [] vetor){
+        
+        int temp;
+        int j;
+        
+        for(int i = 1; i < vetor.length; i++){
+            temp = vetor[i];
+            for(j = i - 1; j >= 0 && (temp < vetor[j]); j--){
+                vetor[j + 1] = vetor[j];
+            }
+            vetor[j + 1] = temp;
+        }
+        return vetor;
+    }
+
     /**
      * Gerador de vetores aleatórios de tamanho pré-definido. 
      * @param tamanho Tamanho do vetor a ser criado.
@@ -228,11 +244,11 @@ public class App {
     public static void main(String[] args) {
         
 
-    executarCodigo1();
-    executarCodigo2();
-    executarCodigo3();
-    executarCodigo4();
-
+    
+    int [] vetor = {23, 16, 4, 42, 8, 15};
+    System.out.println("Vetor original: " + Arrays.toString(vetor));
+    insertionSort(vetor);
+    System.out.println("Vetor ordenado: " + Arrays.toString(vetor));
 
     }
 }
