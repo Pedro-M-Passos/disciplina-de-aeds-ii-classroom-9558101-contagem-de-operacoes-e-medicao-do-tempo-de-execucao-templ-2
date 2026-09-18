@@ -1,254 +1,200 @@
-import java.util.Random;
-import java.util.function.Consumer;
+import java.nio.charset.Charset;
 import java.util.Arrays;
-
-
-/** 
- * MIT License
- *
- * Copyright(c) 2024-255 João Caram <caram@pucminas.br>
- *                       Eveline Alonso Veloso
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
+import java.util.Collections;
+import java.util.Scanner;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 public class App {
-    static final int[] tamanhosTesteGrande =  { 31_250_000, 62_500_000, 125_000_000, 250_000_000, 500_000_000 };
-    static final int[] tamanhosTesteMedio =   {     12_500,     25_000,      50_000,     100_000,     200_000 };
-    static final int[] tamanhosTestePequeno = {          3,          6,          12,          24,          48 };
-    static Random aleatorio = new Random(42);
-    static long operacoes;
-    static double nanoToMilli = 1.0/1_000_000;
 
-    /**
-     * Código de teste 1. Este método...
-     * @param vetor Vetor com dados para teste.
-     * @return Uma resposta que significa....
-     */
-    static int codigo1(int[] vetor) {
-        int resposta = 0;
-        for (int i = 0; i < vetor.length; i += 2) {
-            operacoes++;
-            resposta += vetor[i]%2;
-        }
-        return resposta;
-    }
-
-    /**
-     * Código de teste 2. Este método...
-     * @param vetor Vetor com dados para teste.
-     * @return Uma resposta que significa....
-     */
-    static int codigo2(int[] vetor) {
-        int contador = 0;
-        for (int k = (vetor.length - 1); k > 0; k /= 2) {
-            for (int i = 0; i <= k; i++) {
-                operacoes++;
-                contador++;
-            }
-
-        }
-        return contador;
-    }
-
-    /**
-     * Código de teste 3. Este método...
-     * @param vetor Vetor com dados para teste.
-     */
-    static void codigo3(int[] vetor) {
-        for (int i = 0; i < vetor.length - 1; i++) {
-            int menor = i;
-            for (int j = i + 1; j < vetor.length; j++) {
-                operacoes++;
-                if (vetor[j] < vetor[menor])
-                    menor = j;
-            }
-            int temp = vetor[i];
-            vetor[i] = vetor[menor];
-            vetor[menor] = temp;
-        }
-    }
-
-    /**
-     * Código de teste 4 (recursivo). Este método...
-     * @param n Ponto inicial do algoritmo
-     * @return Um inteiro que significa...
-     */
-    static int codigo4(int n) {
-        operacoes++;
-        if (n <= 2)
-            return 1;
-        else
-            return codigo4(n - 1) + codigo4(n - 2);
-    }
-
-    static void executarCodigo1() {
-
-        for (int tamanho : tamanhosTesteGrande) {
-
-            int[] vetor = gerarVetor(tamanho);
-            operacoes = 0;
-            long inicio = System.nanoTime();
-            codigo1(vetor);
-            long fim = System.nanoTime();
-            double tempo = (fim - inicio) * nanoToMilli;
-            System.out.println(
-                "Tamanho: " + tamanho +
-                " | Operacoes: " + operacoes +
-                " | Tempo: " + tempo + " ms"
-            );
-
-        }
-    }
-
-    static void executarCodigo2() {
-
-        for (int tamanho : tamanhosTesteGrande) {
-
-            int[] vetor = gerarVetor(tamanho);
-            operacoes = 0;
-            long inicio = System.nanoTime();
-            codigo2(vetor);
-            long fim = System.nanoTime();
-            double tempo = (fim - inicio) * nanoToMilli;
-            System.out.println(
-                "Tamanho: " + tamanho +
-                " | Operacoes: " + operacoes +
-                " | Tempo: " + tempo + " ms"
-            );
-
-        }
-    }
-
-    static void executarCodigo3() {
-
-        for (int tamanho : tamanhosTesteMedio) {
-
-            int[] vetor = gerarVetor(tamanho);
-            operacoes = 0;
-            long inicio = System.nanoTime();
-            codigo3(vetor);
-            long fim = System.nanoTime();
-            double tempo = (fim - inicio) * nanoToMilli;
-            System.out.println(
-                "Tamanho: " + tamanho +
-                " | Operacoes: " + operacoes +
-                " | Tempo: " + tempo + " ms"
-            );
-
-        }
-    }
-
-    static void executarCodigo4() {
-
-
-        for (int n : tamanhosTestePequeno) {
-
-            operacoes = 0;
-            long inicio = System.nanoTime();
-            codigo4(n);
-            long fim = System.nanoTime();
-            double tempo = (fim - inicio) * nanoToMilli;
-            System.out.println(
-                "n: " + n +
-                " | Operacoes: " + operacoes +
-                " | Tempo: " + tempo + " ms"
-            );
-
-        }
-    }
-
-    public static void testaVetores(int[] tamanhosVetores, Consumer<int[]> codigo) {
-        
-        int tamVetor;
-        int[] vetor;
-        long inicio, termino;
-        double duracao;
-
-        for(int i = 0; i < tamanhosVetores.length; i++) {
-            tamVetor = tamanhosVetores[i];
-            vetor = gerarVetor(tamVetor);
-            operacoes = 0;
-            inicio = System.nanoTime();
-            codigo.accept(vetor);
-            termino = System.nanoTime();
-            duracao = (double)(termino - inicio) * nanoToMilli;
-            System.out.printf("%,d; %,d; %,.2f ms\n", tamVetor, operacoes, duracao);
-
-        }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
-    }
-
-    static int[] bubbleSort(int[] vetor) {
-        int n = vetor.length;
-        boolean trocou = true;
-
-        for (int i = n - 1; (i > 0 && trocou); i--) {
-            trocou = false;
-            for (int j = 0; j < n - 1; j++) {
-                if (vetor[j] > vetor[j + 1]) {
-                    // Troca os elementos
-                    int temp = vetor[j];
-                    vetor[j] = vetor[j + 1];
-                    vetor[j + 1] = temp;
-                }
-            }
-        }
-        return vetor;
-    }
-
-
-    static int[] insertionSort(int [] vetor){
-        
-        int temp;
-        int j;
-        
-        for(int i = 1; i < vetor.length; i++){
-            temp = vetor[i];
-            for(j = i - 1; j >= 0 && (temp < vetor[j]); j--){
-                vetor[j + 1] = vetor[j];
-            }
-            vetor[j + 1] = temp;
-        }
-        return vetor;
-    }
-
-    /**
-     * Gerador de vetores aleatórios de tamanho pré-definido. 
-     * @param tamanho Tamanho do vetor a ser criado.
-     * @return Vetor com dados aleatórios, com valores entre 1 e (tamanho/2), desordenado.
-     */
-    static int[] gerarVetor(int tamanho){
-        int[] vetor = new int[tamanho];
-        for (int i = 0; i < tamanho; i++) {
-            vetor[i] = aleatorio.nextInt(1, tamanho/2);
-        }
-        return vetor;
-        
-    }
-    public static void main(String[] args) {
-        
-
+	/** Nome do arquivo de dados. O arquivo deve estar localizado na raiz do projeto */
+    static String nomeArquivoDados;
     
-    int [] vetor = {23, 16, 4, 42, 8, 15};
-    System.out.println("Vetor original: " + Arrays.toString(vetor));
-    insertionSort(vetor);
-    System.out.println("Vetor ordenado: " + Arrays.toString(vetor));
+    /** Scanner para leitura de dados do teclado */
+    static Scanner teclado;
 
+    /** Vetor de produtos cadastrados */
+    static Produto[] produtosCadastrados;
+
+    /** Quantidade de produtos cadastrados atualmente no vetor */
+    static int quantosProdutos = 0;
+
+    static Bubblesort<Produto> ordenador;
+
+    static void limparTela() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+    }
+
+    /** Gera um efeito de pausa na CLI. Espera por um enter para continuar */
+    static void pausa() {
+        System.out.println("Digite enter para continuar...");
+        teclado.nextLine();
+    }
+
+    /** Cabeçalho principal da CLI do sistema */
+    static void cabecalho() {
+        System.out.println("AEDs II COMÉRCIO DE COISINHAS");
+        System.out.println("=============================");
+    }
+    
+    static <T extends Number> T lerOpcao(String mensagem, Class<T> classe) {
+        
+    	T valor;
+        
+    	System.out.println(mensagem);
+    	try {
+            valor = classe.getConstructor(String.class).newInstance(teclado.nextLine());
+        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException 
+        		| InvocationTargetException | NoSuchMethodException | SecurityException e) {
+            return null;
+        }
+        return valor;
+    }
+    
+    /** Imprime o menu principal, lê a opção do usuário e a retorna (int).
+     * Perceba que poderia haver uma melhor modularização com a criação de uma classe Menu.
+     * @return Um inteiro com a opção do usuário.
+    */
+    static int menu() {
+        cabecalho();
+        System.out.println("1 - Procurar por um produto");
+        System.out.println("2 - Ordenar produtos");
+        System.out.println("3 - Embaralhar produtos");
+        System.out.println("4 - Listar todos os produtos");
+        System.out.println("0 - Finalizar");
+        
+        return lerOpcao("Digite sua opção: ", Integer.class);
+    }
+    
+    /**
+     * Lê os dados de um arquivo-texto e retorna um vetor de produtos. Arquivo-texto no formato
+     * N  (quantidade de produtos) <br/>
+     * tipo;descrição;preçoDeCusto;margemDeLucro;[dataDeValidade] <br/>
+     * Deve haver uma linha para cada um dos produtos. Retorna um vetor vazio em caso de problemas com o arquivo.
+     * @param nomeArquivoDados Nome do arquivo de dados a ser aberto.
+     * @return Um vetor com os produtos carregados, ou vazio em caso de problemas de leitura.
+     */
+    static Produto[] lerProdutos(String nomeArquivoDados) {
+    	
+    	Scanner arquivo = null;
+    	int numProdutos;
+    	String linha;
+    	Produto produto;
+    	Produto[] produtosCadastrados;
+    	
+    	try {
+    		arquivo = new Scanner(new File(nomeArquivoDados), Charset.forName("UTF-8"));
+    		
+    		numProdutos = Integer.parseInt(arquivo.nextLine());
+    		produtosCadastrados = new Produto[numProdutos];
+    		
+    		for (int i = 0; i < numProdutos; i++) {
+    			linha = arquivo.nextLine();
+    			produto = Produto.criarDoTexto(linha);
+    			produtosCadastrados[i] = produto;
+    		}
+    		quantosProdutos = numProdutos;
+    		
+    	} catch (IOException excecaoArquivo) {
+    		produtosCadastrados = null;
+    	} finally {
+    		arquivo.close();
+    	}
+    	
+    	return produtosCadastrados;
+    }
+    
+    static Produto localizarProduto() {
+        
+    	Produto produto = null;
+    	Boolean localizado = false;
+    	
+    	cabecalho();
+    	System.out.println("Localizando um produto...");
+        int idProduto = lerOpcao("Digite o identificador do produto desejado: ", Integer.class);
+        for (int i = 0; (i < quantosProdutos && !localizado); i++) {
+    		if (produtosCadastrados[i].hashCode() == idProduto) {
+        		produto = produtosCadastrados[i];
+        		localizado = true;
+        	}
+        }
+        
+        return produto;   
+    }
+    
+    private static void mostrarProduto(Produto produto) {
+    	
+        cabecalho();
+        String mensagem = "Dados inválidos para o produto!";
+        
+        if (produto != null){
+            mensagem = String.format("Dados do produto:\n%s", produto);
+        }
+        
+        System.out.println(mensagem);
+    }
+    
+    static void ordenarProdutos(){
+    	
+        cabecalho();
+        
+        ordenador = new Bubblesort<>();
+
+        produtosCadastrados = ordenador.ordenar(produtosCadastrados);        
+        System.out.println("Tempo gasto com a ordenação dos produtos: " + ordenador.getTempoOrdenacao() + " ms.");
+    }
+
+    static void embaralharProdutos(){
+        Collections.shuffle(Arrays.asList(produtosCadastrados));
+    }
+
+    /** Lista todos os produtos cadastrados, numerados, um por linha */
+    static void listarTodosOsProdutos() {
+    	
+        cabecalho();
+        System.out.println("\nProdutos cadastrados: ");
+        for (int i = 0; i < quantosProdutos; i++) {
+        	System.out.println(String.format("%02d - %s", (i + 1), produtosCadastrados[i].toString()));
+        }
+    }
+
+    static void ordenarProdutos(){
+
+        int opcao;
+
+        cabecalho();
+
+        opcao = exibirMenuOrdernadores();
+        switch(opcao){
+            case 1 -> ordenador = new Bubblesort<>();
+            case 2 -> ordenador = new Mergesort<>();
+        }
+
+        produtosCadastrados = ordenador.ordenar(produtosCadastrados);
+        System.out.println("Tempo gasto com a ordenação dos produtos: " + ordenador.getTempoOrdenacao() + " ms.");
+    }
+    
+    public static void main(String[] args) {
+		teclado = new Scanner(System.in, Charset.forName("UTF-8"));
+        nomeArquivoDados = "produtos.txt";
+        produtosCadastrados = lerProdutos(nomeArquivoDados);
+        
+        int opcao = -1;
+      
+        do{
+        	opcao = menu();
+            switch (opcao) {
+                case 1 -> mostrarProduto(localizarProduto());
+                case 2 -> ordenarProdutos();
+                case 3 -> embaralharProdutos();
+                case 4 -> listarTodosOsProdutos();
+                case 0 -> System.out.println("FLW VLW OBG VLT SMP.");
+            }
+            pausa();
+        } while (opcao != 0);       
+
+        teclado.close();    
     }
 }
