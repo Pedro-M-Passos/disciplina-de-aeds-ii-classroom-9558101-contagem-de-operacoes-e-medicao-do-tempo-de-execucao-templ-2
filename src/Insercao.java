@@ -1,6 +1,6 @@
 import java.util.Comparator;
 
-public class Bubblesort<T extends Comparable<T>> implements IOrdenator<T> {
+public class Insercao<T extends Comparable<T>> implements IOrdenator<T> {
 
 	private T[] dadosOrdenados;
 	private Comparator<T> comparador;
@@ -9,14 +9,14 @@ public class Bubblesort<T extends Comparable<T>> implements IOrdenator<T> {
 	private long inicio;
 	private long termino;
 	
-	public Bubblesort() {
+	public Insercao() {
 		
 		comparacoes = 0;
 		movimentacoes = 0;
 		setComparador(T::compareTo);
 	}
 	
-	public Bubblesort(Comparator<T> comparador) {
+	public Insercao(Comparator<T> comparador) {
 		
 		comparacoes = 0;
 		movimentacoes = 0;
@@ -37,26 +37,26 @@ public class Bubblesort<T extends Comparable<T>> implements IOrdenator<T> {
 		movimentacoes = 0;
 		iniciar();
 		
-		for (int i = dadosOrdenados.length - 1; i > 0; i--) {
-			for (int j = 0; j < i; j++) {
+		for (int i = 1; i < dadosOrdenados.length; i++) {
+			T temp = dadosOrdenados[i];
+			int j = i - 1;
+			while (j >= 0) {
 				comparacoes++;
-				if (comparador.compare(dadosOrdenados[j], dadosOrdenados[j + 1]) > 0)
-					swap (j, j + 1);
+				if (comparador.compare(temp, dadosOrdenados[j]) < 0) {
+					movimentacoes++;
+					dadosOrdenados[j + 1] = dadosOrdenados[j];
+					j--;
+				} else {
+					break;
+				}
 			}
+			movimentacoes++;
+			dadosOrdenados[j + 1] = temp;
 		}
 		
 		terminar();
 		
-		return  dadosOrdenados;
-	}
-	
-	private void swap(int i, int j) {
-	      
-		movimentacoes++;
-		
-		T temp = dadosOrdenados[i];
-	    dadosOrdenados[i] = dadosOrdenados[j];
-	    dadosOrdenados[j] = temp;
+		return dadosOrdenados;
 	}
 	
 	@Override

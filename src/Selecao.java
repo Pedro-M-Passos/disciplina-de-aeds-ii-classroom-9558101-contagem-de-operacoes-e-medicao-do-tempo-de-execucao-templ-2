@@ -1,6 +1,6 @@
 import java.util.Comparator;
 
-public class Bubblesort<T extends Comparable<T>> implements IOrdenator<T> {
+public class Selecao<T extends Comparable<T>> implements IOrdenator<T> {
 
 	private T[] dadosOrdenados;
 	private Comparator<T> comparador;
@@ -9,14 +9,14 @@ public class Bubblesort<T extends Comparable<T>> implements IOrdenator<T> {
 	private long inicio;
 	private long termino;
 	
-	public Bubblesort() {
+	public Selecao() {
 		
 		comparacoes = 0;
 		movimentacoes = 0;
 		setComparador(T::compareTo);
 	}
 	
-	public Bubblesort(Comparator<T> comparador) {
+	public Selecao(Comparator<T> comparador) {
 		
 		comparacoes = 0;
 		movimentacoes = 0;
@@ -37,17 +37,19 @@ public class Bubblesort<T extends Comparable<T>> implements IOrdenator<T> {
 		movimentacoes = 0;
 		iniciar();
 		
-		for (int i = dadosOrdenados.length - 1; i > 0; i--) {
-			for (int j = 0; j < i; j++) {
+		for (int i = 0; i < dadosOrdenados.length - 1; i++) {
+			int menor = i;
+			for (int j = i + 1; j < dadosOrdenados.length; j++) {
 				comparacoes++;
-				if (comparador.compare(dadosOrdenados[j], dadosOrdenados[j + 1]) > 0)
-					swap (j, j + 1);
+				if (comparador.compare(dadosOrdenados[j], dadosOrdenados[menor]) < 0)
+					menor = j;
 			}
+			swap(i, menor);
 		}
 		
 		terminar();
 		
-		return  dadosOrdenados;
+		return dadosOrdenados;
 	}
 	
 	private void swap(int i, int j) {

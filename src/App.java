@@ -1,6 +1,7 @@
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Scanner;
 import java.io.File;
 import java.io.IOException;
@@ -20,7 +21,7 @@ public class App {
     /** Quantidade de produtos cadastrados atualmente no vetor */
     static int quantosProdutos = 0;
 
-    static Bubblesort<Produto> ordenador;
+    static IOrdenator<Produto> ordenador;
 
     static void limparTela() {
         System.out.print("\033[H\033[2J");
@@ -140,10 +141,46 @@ public class App {
     	
         cabecalho();
         
-        ordenador = new Bubblesort<>();
+        System.out.println("Métodos de ordenação:");
+        System.out.println("1 - Bolha (Bubblesort)");
+        System.out.println("2 - Mergesort");
+        System.out.println("3 - Seleção");
+        System.out.println("4 - Inserção");
+        int metodo = lerOpcao("Digite o método desejado: ", Integer.class);
+        
+        switch (metodo) {
+            case 1 -> ordenador = new Bubblesort<>();
+            case 2 -> ordenador = new Mergesort<>();
+            case 3 -> ordenador = new Selecao<>();
+            case 4 -> ordenador = new Insercao<>();
+            default -> {
+                System.out.println("Método inválido!");
+                return;
+            }
+        }
+        
+        System.out.println("Critérios de ordenação:");
+        System.out.println("1 - Identificador");
+        System.out.println("2 - Descrição");
+        System.out.println("3 - Preço de venda");
+        int criterio = lerOpcao("Digite o critério desejado: ", Integer.class);
+        
+        Comparator<Produto> comparador;
+        switch (criterio) {
+            case 1 -> comparador = Produto::compareTo;
+            case 2 -> comparador = new ComparadorPorDescricao();
+            case 3 -> comparador = new ComparadorPorPreco();
+            default -> {
+                System.out.println("Critério inválido!");
+                return;
+            }
+        }
+        ordenador.setComparador(comparador);
 
-        produtosCadastrados = ordenador.ordenar(produtosCadastrados);        
+        produtosCadastrados = ordenador.ordenar(produtosCadastrados);
         System.out.println("Tempo gasto com a ordenação dos produtos: " + ordenador.getTempoOrdenacao() + " ms.");
+        System.out.println("Comparações: " + ordenador.getComparacoes());
+        System.out.println("Movimentações: " + ordenador.getMovimentacoes());
     }
 
     static void embaralharProdutos(){
